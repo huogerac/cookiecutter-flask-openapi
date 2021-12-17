@@ -11,6 +11,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+{%- if cookiecutter.use_dockerfile == 'yes' %}
   backend_api:
     container_name: {{cookiecutter.project_slug}}-api
     build:
@@ -31,5 +32,6 @@ services:
     depends_on:
       - postgres_dev
 
+{%- endif %}
 volumes:
   postgres_data:
