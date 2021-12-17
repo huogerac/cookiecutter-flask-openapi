@@ -32,17 +32,30 @@ SUCCESS = "\x1b[1;32m [SUCCESS]: "
 
 DEBUG_VALUE = "debug"
 
+
 def remove_docker_files():
 
     file_names = ["Dockerfile", ".dockerignore"]
     for file_name in file_names:
         os.remove(file_name)
 
+
+def remove_github_actions_files():
+    github_actions_dir = ".github"
+    if os.path.exists(github_actions_dir):
+        shutil.rmtree(github_actions_dir)
+
+
 def main():
 
     if "{{ cookiecutter.use_dockerfile }}".lower() != "yes":
         print(INFO + "  - Removing 🐳 Dockerfile and the container for the backend" + TERMINATOR)
+        print(INFO + "  - Removing 🐳 CI Docker Build" + TERMINATOR)
         remove_docker_files()
+
+    if "{{ cookiecutter.use_github_actions_CI }}".lower() != "yes":
+        print(INFO + "  - Removing Github Actions workflow file" + TERMINATOR)
+        remove_github_actions_files()
 
     print(SUCCESS + "Huruuuu, projecto criado!" + TERMINATOR)
 
