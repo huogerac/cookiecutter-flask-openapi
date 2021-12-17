@@ -1,0 +1,246 @@
+openapi: 3.0.2
+
+info:
+  version: 0.0.2
+  title: {{cookiecutter.project_slug}} API
+  description: API
+
+paths:
+  /api/auth/login:
+    post:
+      operationId: {{cookiecutter.project_slug}}.api.auth.login
+      summary: User login to get a JWT Token
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                password:
+                  type: string
+                  example: "@bC1234"
+      responses:
+        200:
+          description: JWT Access Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: Encripted.JWT.Token
+                  refresh_token:
+                    type: string
+                    example: Another.Encripted.JWT.Token.With.Long.Expiration
+        400:
+          description: Bad request. You must send a username and password
+        401:
+          description: Username or password is invalid
+
+  /api/auth/signup:
+    post:
+      operationId: {{cookiecutter.project_slug}}.api.auth.signup
+      summary: Create a new User
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - username
+                - password
+                - email
+                - name
+              properties:
+                username:
+                  type: string
+                  example: johndoe
+                password:
+                  type: string
+                  example: "@bC1234"
+                email:
+                  type: string
+                  example: "jd@example.com"
+                name:
+                  type: string
+                  example: "John Doe"
+                avatar:
+                  type: string
+                  example: "Image URL"
+                  nullable: true
+
+      responses:
+        200:
+          description: JWT Access Token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: Encripted.JWT.Token
+                  refresh_token:
+                    type: string
+                    example: Another.Encripted.JWT.Token.With.Long.Expiration
+        400:
+          description: Bad request. You must send a username and password
+        401:
+          description: Username or password is invalid
+
+  /api/news:
+    get:
+      operationId: {{cookiecutter.project_slug}}.api.news.list_news
+      summary: Returns the latest news
+      tags:
+        - News
+
+      responses:
+        200:
+          description: The lastest news
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/News"
+    post:
+      operationId: {{cookiecutter.project_slug}}.api.news.create_news
+      summary: Creates a news
+      tags:
+        - News
+      security:
+        - jwtAuth: [news:create]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  example: This is an awesome news
+                  minLength: 12
+                description:
+                  type: string
+                  example: Some extra information about the news
+                  nullable: true
+
+      responses:
+        201:
+          description: News created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/News"
+        400:
+          description: Invalid data
+        401:
+          description: No Authorization
+        403:
+          description: No Permission
+
+  /api/status:
+    get:
+      operationId: {{cookiecutter.project_slug}}.api.status.get_status
+      summary: Returns the system statuses
+      tags:
+        - Status
+
+      responses:
+        200:
+          description: Success
+
+components:
+  securitySchemes:
+    jwtAuth:
+      type: oauth2
+      x-tokenInfoFunc: {{cookiecutter.project_slug}}.services.token.check_token_info
+      flows:
+        authorizationCode:
+          tokenUrl: "url"
+          authorizationUrl: "url"
+
+  schemas:
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: John Doe
+        username:
+          type: string
+          example: johndoe
+        avatar:
+          type: string
+          example: http://example.com/img/avatar/jose_thumb.png
+          nullable: true
+
+    News:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        title:
+          type: string
+          example: Python is a great option for backend and APIs
+        description:
+          type: string
+          example: This is along text within more detailed information about the news
+          nullable: true
+        author:
+          $ref: "#/components/schemas/Author"
+          nullable: true
+        comments_count:
+          type: integer
+          example: 1
+          nullable: true
+        comments:
+          type: array
+          nullable: true
+          items:
+            $ref: "#/components/schemas/Comment"
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-01-11T11:32:28Z
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 100
+        text:
+          type: string
+          example: This is an awesome news
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-01-11T11:32:28Z
