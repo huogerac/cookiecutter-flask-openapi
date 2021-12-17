@@ -1,0 +1,35 @@
+version: "2.4"
+services:
+  postgres_dev:
+    container_name: "{{cookiecutter.project_slug}}-postgres-local"
+    image: "postgres:{{cookiecutter.postgresql_version}}"
+    env_file:
+      - .env
+    ports:
+      - "54320:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend_api:
+    container_name: {{cookiecutter.project_slug}}-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      FLASK_APP: {{cookiecutter.project_slug}}.app
+      FLASK_ENV: development
+      FLASK_SECRET_KEY: ijhsabfgiipfhsiufhewi
+      C_FORCE_ROOT: "y"
+      DATABASE_URI: postgresql://{{cookiecutter.project_slug}}:{{cookiecutter.project_slug}}@postgres_dev/{{cookiecutter.project_slug}}_dblocal
+    volumes:
+      - ./:/app
+    ports:
+      - "5000:5000"
+    tty: true
+    depends_on:
+      - postgres_dev
+
+volumes:
+  postgres_data:
