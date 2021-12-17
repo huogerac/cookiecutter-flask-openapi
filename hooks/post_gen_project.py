@@ -53,6 +53,12 @@ def remove_heroku_files():
         os.remove(file_name)
 
 
+def remove_vscode_files():
+    vscode_dir = ".vscode"
+    if os.path.exists(vscode_dir):
+        shutil.rmtree(vscode_dir)
+
+
 def main():
 
     if "{{ cookiecutter.use_dockerfile }}".lower() != "yes":
@@ -68,8 +74,27 @@ def main():
         print(INFO + "  - Removing Procfile (Heroku deploy)" + TERMINATOR)
         remove_heroku_files()
 
-    print(SUCCESS + "Huruuuu, projecto criado!" + TERMINATOR)
+    if "{{ cookiecutter.keep_vscode_settings }}".lower() != "yes":
+        print(INFO + "  - Removing VSCode files" + TERMINATOR)
+        remove_vscode_files()
 
+    print("\n\n")
+    print(SUCCESS + "🐍 Huruuuu, All done! ✨ 🍰 ✨\n\n" + HINT)
+
+    print("What's next?")
+    print("  1) 🐳 Running using docker")
+    print("     cd {{ cookiecutter.project_slug }}")
+    print("     docker-compose up --build\n\n")
+
+    print("  2) 🐍 Running using virtualenv")
+    print("     cd {{ cookiecutter.project_slug }}")
+    print("     make virtualenv")
+    print("     source .venv/bin/activate")
+    print("     make all\n\n")
+    print("  Then")
+    print("     access 🚀 http://localhost:5000/api\n\n" + TERMINATOR)
+
+    print(INFO + "⚠️ You must have Docker installed, at least to run the postgres database\n" + TERMINATOR)
 
 if __name__ == "__main__":
     main()

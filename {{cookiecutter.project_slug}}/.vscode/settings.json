@@ -1,0 +1,10 @@
+{
+    "python.formatting.provider": "black",
+    "python.pythonPath": ".venv/bin/python3",
+    "editor.formatOnSave": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

@@ -18,5 +18,6 @@
   ],
   "use_dockerfile": "yes",
   "use_github_actions_CI": "yes",
-  "deploy_to_heroku": "yes"
+  "deploy_to_heroku": "yes",
+  "keep_vscode_settings": "yes"
 }
