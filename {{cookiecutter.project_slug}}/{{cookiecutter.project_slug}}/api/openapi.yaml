@@ -2,7 +2,7 @@ openapi: 3.0.2
 
 info:
   version: 0.0.2
-  title: {{cookiecutter.project_slug}} API
+  title: {{cookiecutter.project_name}} API
   description: API
 
 paths:
@@ -103,16 +103,16 @@ paths:
         401:
           description: Username or password is invalid
 
-  /api/news:
+  /api/{{cookiecutter.main_model_lower}}:
     get:
-      operationId: {{cookiecutter.project_slug}}.api.news.list_news
-      summary: Returns the latest news
+      operationId: {{cookiecutter.project_slug}}.api.{{cookiecutter.main_model_lower}}.list_{{cookiecutter.main_model_lower}}
+      summary: Returns the latest {{cookiecutter.main_model_lower}}
       tags:
-        - News
+        - {{cookiecutter.main_model}}
 
       responses:
         200:
-          description: The lastest news
+          description: The lastest {{cookiecutter.main_model_lower}}
           content:
             application/json:
               schema:
@@ -121,14 +121,14 @@ paths:
                   result:
                     type: array
                     items:
-                      $ref: "#/components/schemas/News"
+                      $ref: "#/components/schemas/{{cookiecutter.main_model}}"
     post:
-      operationId: {{cookiecutter.project_slug}}.api.news.create_news
-      summary: Creates a news
+      operationId: {{cookiecutter.project_slug}}.api.{{cookiecutter.main_model_lower}}.create_{{cookiecutter.main_model_lower}}
+      summary: Creates a {{cookiecutter.main_model_lower}}
       tags:
-        - News
+        - {{cookiecutter.main_model}}
       security:
-        - jwtAuth: [news:create]
+        - jwtAuth: [{{cookiecutter.main_model_lower}}:create]
       requestBody:
         required: true
         content:
@@ -141,20 +141,20 @@ paths:
               properties:
                 title:
                   type: string
-                  example: This is an awesome news
+                  example: This is an awesome {{cookiecutter.main_model_lower}}
                   minLength: 12
                 description:
                   type: string
-                  example: Some extra information about the news
+                  example: Some extra information about the {{cookiecutter.main_model_lower}}
                   nullable: true
 
       responses:
         201:
-          description: News created succesfully
+          description: {{cookiecutter.main_model}} created succesfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/News"
+                $ref: "#/components/schemas/{{cookiecutter.main_model}}"
         400:
           description: Invalid data
         401:
@@ -201,7 +201,7 @@ components:
           example: http://example.com/img/avatar/jose_thumb.png
           nullable: true
 
-    News:
+    {{cookiecutter.main_model}}:
       type: object
       properties:
         id:
@@ -212,7 +212,7 @@ components:
           example: Python is a great option for backend and APIs
         description:
           type: string
-          example: This is along text within more detailed information about the news
+          example: This is along text within more detailed information about the {{cookiecutter.main_model_lower}}
           nullable: true
         author:
           $ref: "#/components/schemas/Author"
@@ -239,7 +239,7 @@ components:
           example: 100
         text:
           type: string
-          example: This is an awesome news
+          example: This is an awesome {{cookiecutter.main_model_lower}}
         created_at:
           type: string
           format: date-time

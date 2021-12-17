@@ -1,5 +1,5 @@
 from {{cookiecutter.project_slug}}.ext import api, configuration, database
-from {{cookiecutter.project_slug}}.models.news import News  # pylint: disable=W0611
+from {{cookiecutter.project_slug}}.models.{{cookiecutter.main_model_lower}} import {{cookiecutter.main_model}}  # pylint: disable=W0611
 from {{cookiecutter.project_slug}}.models.users import User  # pylint: disable=W0611
 
 

@@ -1,4 +1,4 @@
-"""Adiciona User.password
+"""Add the User.password
 
 Revision ID: 4bd7bc7e514b
 Revises: 9590c8bed039

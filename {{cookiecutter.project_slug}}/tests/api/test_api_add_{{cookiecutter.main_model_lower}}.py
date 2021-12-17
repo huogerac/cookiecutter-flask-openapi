@@ -4,7 +4,7 @@ from mock import patch
 def test_should_return_bad_request(token_valid_mock, client):
     # Given a request with no input data (body)
     response = client.post(
-        "/api/news", headers={"authorization": f"Bearer {token_valid_mock}"}
+        "/api/{{cookiecutter.main_model_lower}}", headers={"authorization": f"Bearer {token_valid_mock}"}
     )
 
     # Then
@@ -15,7 +15,7 @@ def test_should_return_bad_request(token_valid_mock, client):
 def test_should_return_title_is_a_required_field(token_valid_mock, client):
     # Given a request with a missing required field
     response = client.post(
-        "/api/news",
+        "/api/{{cookiecutter.main_model_lower}}",
         headers={"authorization": f"Bearer {token_valid_mock}"},
         json={},
     )
@@ -28,7 +28,7 @@ def test_should_return_title_is_a_required_field(token_valid_mock, client):
 def test_should_reject_title_less_than_min_title_length(token_valid_mock, client):
     # Given a request with an invalid title
     response = client.post(
-        "/api/news",
+        "/api/{{cookiecutter.main_model_lower}}",
         headers={"authorization": f"Bearer {token_valid_mock}"},
         json={"title": "tiny-title"},
     )
@@ -38,14 +38,14 @@ def test_should_reject_title_less_than_min_title_length(token_valid_mock, client
     assert response.json["detail"] == "'tiny-title' is too short - 'title'"
 
 
-@patch("{{cookiecutter.project_slug}}.services.news.create_news")
-def test_should_accept_null_description(news_mock, token_valid_mock, client):
+@patch("{{cookiecutter.project_slug}}.services.{{cookiecutter.main_model_lower}}.create_{{cookiecutter.main_model_lower}}")
+def test_should_accept_null_description({{cookiecutter.main_model_lower}}_mock, token_valid_mock, client):
 
-    news_mock.return_value = {}
+    {{cookiecutter.main_model_lower}}_mock.return_value = {}
 
     # Given a request with an empty description (non string)
     response = client.post(
-        "/api/news",
+        "/api/{{cookiecutter.main_model_lower}}",
         headers={"authorization": f"Bearer {token_valid_mock}"},
         json={
             "title": "A valid and simple title",
@@ -55,22 +55,22 @@ def test_should_accept_null_description(news_mock, token_valid_mock, client):
 
     # Then
     assert response.status_code == 201
-    news_mock.assert_called_once_with("A valid and simple title", None)
+    {{cookiecutter.main_model_lower}}_mock.assert_called_once_with("A valid and simple title", None)
 
 
-@patch("{{cookiecutter.project_slug}}.services.news.create_news")
-def test_create_news_id(news_mock, token_valid_mock, client):
+@patch("{{cookiecutter.project_slug}}.services.{{cookiecutter.main_model_lower}}.create_{{cookiecutter.main_model_lower}}")
+def test_create_{{cookiecutter.main_model_lower}}_id({{cookiecutter.main_model_lower}}_mock, token_valid_mock, client):
 
-    news_mock.return_value = {}
+    {{cookiecutter.main_model_lower}}_mock.return_value = {}
 
     response = client.post(
-        "/api/news",
+        "/api/{{cookiecutter.main_model_lower}}",
         headers={"authorization": f"Bearer {token_valid_mock}"},
         json={
-            "title": "First Test News",
+            "title": "First Test {{cookiecutter.main_model_lower}}",
             "description": "1o. teste",
         },
     )
 
     assert response.status_code == 201
-    news_mock.assert_called_once_with("First Test News", "1o. teste")
+    {{cookiecutter.main_model_lower}}_mock.assert_called_once_with("First Test {{cookiecutter.main_model_lower}}", "1o. teste")

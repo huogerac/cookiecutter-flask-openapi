@@ -1,4 +1,4 @@
-"""Cria tabela de usuários
+"""Create the User table
 
 Revision ID: e608b0a91508
 Revises: 

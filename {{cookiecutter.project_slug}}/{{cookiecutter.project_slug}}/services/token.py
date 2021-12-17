@@ -11,7 +11,7 @@ def generate_token(user, days=None, hours=None, scope=None):
     Gera token
     """
     if not scope:
-        scope = ["news:create"]
+        scope = ["{{cookiecutter.main_model_lower}}:create"]
 
     if days is None:
         days = current_app.config["JWT_EXPIRE_DAYS"]

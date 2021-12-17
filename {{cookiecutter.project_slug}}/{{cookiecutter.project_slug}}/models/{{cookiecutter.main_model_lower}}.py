@@ -6,9 +6,9 @@ from {{cookiecutter.project_slug}}.ext.database import db
 from {{cookiecutter.project_slug}}.models.users import User
 
 
-class News(db.Model):
+class {{cookiecutter.main_model}}(db.Model):
 
-    __tablename__ = "news"
+    __tablename__ = "{{cookiecutter.main_model_lower}}"
 
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     title = sa.Column(sa.String(128), nullable=False)
@@ -22,7 +22,7 @@ class News(db.Model):
         index=True,
     )
 
-    author = db.relationship(User, backref=db.backref("news", lazy="dynamic"))
+    author = db.relationship(User, backref=db.backref("{{cookiecutter.main_model_lower}}", lazy="dynamic"))
 
     def __repr__(self):
         return self.title

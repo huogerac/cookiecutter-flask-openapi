@@ -1,4 +1,4 @@
-"""Cria tabela de notícias
+"""Create the {{cookiecutter.main_model}} table
 
 Revision ID: 9590c8bed039
 Revises: e608b0a91508
@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
 
     op.create_table(
-        "news",
+        "{{cookiecutter.main_model_lower}}",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("title", sa.String(length=128), nullable=False),
         sa.Column("description", sa.UnicodeText(), nullable=True),
@@ -30,9 +30,9 @@ def upgrade():
         ),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index(op.f("ix_news_author_id"), "news", ["author_id"], unique=False)
+    op.create_index(op.f("ix_{{cookiecutter.main_model_lower}}_author_id"), "{{cookiecutter.main_model_lower}}", ["author_id"], unique=False)
 
 
 def downgrade():
-    op.drop_index(op.f("ix_news_author_id"), table_name="news")
-    op.drop_table("news")
+    op.drop_index(op.f("ix_{{cookiecutter.main_model_lower}}_author_id"), table_name="{{cookiecutter.main_model_lower}}")
+    op.drop_table("{{cookiecutter.main_model_lower}}")

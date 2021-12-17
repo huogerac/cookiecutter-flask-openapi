@@ -5,10 +5,10 @@ def test_should_return_not_found(client):
     assert response.status_code == 404
 
 
-def test_should_get_the_list_news(client):
+def test_should_get_the_list_{{cookiecutter.main_model_lower}}(client):
 
     response = client.get(
-        "/api/news",
+        "/api/{{cookiecutter.main_model_lower}}",
         headers={"content-type": "application/json"},
     )
 
