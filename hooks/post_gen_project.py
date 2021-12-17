@@ -35,7 +35,7 @@ DEBUG_VALUE = "debug"
 
 def remove_docker_files():
 
-    file_names = ["Dockerfile", ".dockerignore"]
+    file_names = ["Dockerfile", ".dockerignore", ]
     for file_name in file_names:
         os.remove(file_name)
 
@@ -44,6 +44,13 @@ def remove_github_actions_files():
     github_actions_dir = ".github"
     if os.path.exists(github_actions_dir):
         shutil.rmtree(github_actions_dir)
+
+
+def remove_heroku_files():
+
+    file_names = ["Procfile", ]
+    for file_name in file_names:
+        os.remove(file_name)
 
 
 def main():
@@ -56,6 +63,10 @@ def main():
     if "{{ cookiecutter.use_github_actions_CI }}".lower() != "yes":
         print(INFO + "  - Removing Github Actions workflow file" + TERMINATOR)
         remove_github_actions_files()
+
+    if "{{ cookiecutter.deploy_to_heroku }}".lower() != "yes":
+        print(INFO + "  - Removing Procfile (Heroku deploy)" + TERMINATOR)
+        remove_heroku_files()
 
     print(SUCCESS + "Huruuuu, projecto criado!" + TERMINATOR)
 
