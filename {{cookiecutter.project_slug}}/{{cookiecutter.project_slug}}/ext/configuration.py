@@ -22,7 +22,7 @@ class ProductionConfig:  # pylint: disable=R0903
     FLASK_ENV = "production"
     DEBUG = False
     TESTING = False
-    SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "Ch@nG3_th1s_IN_PR0D!")
+    SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "{{ random_ascii_string(48) }}")
     # SERVER_NAME = os.getenv("SERVER_NAME", "127.0.0.1:5000")
 
     # DATABASE
