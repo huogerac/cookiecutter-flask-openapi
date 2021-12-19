@@ -28,7 +28,7 @@
 - Every layer is separated in context/domain
 - Service layer for better tests and reuse
 - Using Flask Factory to integrate with extensions
-- Migrartions using Alembic
+- Migrations using Alembic
 - ORM using SQLAlchemy
 - Optimized development and production settings
 - Comes with user model ready to go, signup & signin
@@ -43,11 +43,17 @@
 - Code formatter (Black+iSort)
 - Using .env file
 - Docker support using docker-compose for development
+- Docker using multistage (Production Ready Dockerfile)
 - Postgres in development (using docker-compose)
-- Docker using multistage (Different build for development)
 - CI using Github Actions
 
 ## Structure
+
+This project is organized in:
+- Layers 🧅, which might not change in the project life cycle
+- Modules 📦, for domain contexts, which might scale in terms of new features
+- Configuration ⚙️ separated based on the extensions
+- The 🎂 Business modules
 
 ```
 Hackernews-Clone
@@ -176,12 +182,8 @@ What's next?
 
 
 
-
-
-
-
 ## Thanks and Inspirations
 
-- This template is based on [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django). Thanks PyDanny and the Cookiecutter maintainers
+- This template is based on [cookiecutter-django](https://github.com/cookiecutter/cookiecutter-django). Thanks [PyDanny](https://github.com/pydanny) and the Cookiecutter maintainers
 
-- This Flask structure is based on ["Arquitetura Definitiva para o Projeto Web Com Python e Flask"](https://www.youtube.com/watch?v=-qWySnuoaTM). Thanks Bruno Rocha and all yours Flask contents
+- This Flask structure is based on ["Arquitetura Definitiva para o Projeto Web Com Python e Flask"](https://www.youtube.com/watch?v=-qWySnuoaTM). Thanks [Bruno Rocha](https://github.com/rochacbruno) and all yours awesome Flask contents
