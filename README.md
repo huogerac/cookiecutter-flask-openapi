@@ -13,17 +13,82 @@
 
 ## Why using this boilerplate ❓
 
-- TODO
+- Focus on the business and creating value
+- Faster project setup
+- Standard project structure organization (easy to scale)
+- Better QA
 
 
 ## What's Included (Features) 🎉
 
-- TODO
 
+- API Design first using OpenAPI & Connexion
+- API documentation using swagger UI
+- Login using JWT
+- Every layer is separated in context/domain
+- Service layer for better tests and reuse
+- Using Flask Factory to integrate with extensions
+- Migrartions using Alembic
+- ORM using SQLAlchemy
+- Optimized development and production settings
+- Comes with user model ready to go, signup & signin
+- Procfile for deploying to Heroku
+- Customizable PostgreSQL version
+- Tests using pytest
+- Unit tests for the API layer
+- Unit tests for the service layer
+
+**Development**
+- Code linter
+- Code formatter (Black+iSort)
+- Using .env file
+- Docker support using docker-compose for development
+- Postgres in development (using docker-compose)
+- Docker using multistage (Different build for development)
+- CI using Github Actions
 
 ## Structure
 
-- TODO
+```
+Hackernews-Clone
+.
+├── hackernews
+│   ├── app.py                    👉 Entrypoint (create_app)
+│   ├── exceptions.py
+│   ├── 🧅 ext                    👉 Settings
+│   │   ├── ⚙️ configuration.py
+│   │   ├── ⚙️ api.py
+│   │   └── ⚙️ database.py
+│   │   ...
+│   ├── 🧅 api                    👉 API Routes
+│   │   ├── 📦 auth.py
+│   │   ├── 📦 news.py
+│   │   └── 📦 openapi.yaml       👉 API Contract
+│   │   ...
+│   ├── 🧅 services               👉 Business rules
+│   │   ├── 📦 auth.py 🎂
+│   │   ├── 📦 news.py 🎂
+│   │   └── 📦 token.py 🎂
+│   │   ...
+│   └── 🧅 models                 👉 ORM
+│       ├── 📦 news.py
+│       └── 📦 users.py
+│       ...
+├── ⚙️ migrations                 👉 Database versions
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+├── tests
+│   ├── conftest.py
+│   ├── api                      👉 Endpoint tests, input, output and validation 
+│   ├── database                 👉 Database connection tests
+│   └── services                 👉 Business rules tests
+├── requirements.txt
+├── pytest.ini
+├── uwsgi.ini                    👉 Application server settings  
+└── wsgi.py                      👉 WSGI Deploy file (Gunicorn/uWSGI)
+```
 
 ## Requirements
 
