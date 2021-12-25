@@ -180,6 +180,137 @@ What's next?
 
 - 🇧🇷 [Estrutura e organização de pastas em projetos Flask](https://huogerac.hashnode.dev/estrutura-e-organizacao-de-pastas-em-projetos-flask)
 
+- 🇧🇷 [API Design First](https://speakerdeck.com/huogerac/api-design-first-pt-br)
+
+
+## API Design First Approach
+
+The big difference in this template is the way APIs are created, it uses the [connexion](https://github.com/zalando/connexion) to build up the API Contract (YAML) first. So the API documentation is created from the contract and not from 
+code.
+
+### Understanding the structure from tests
+
+We can start new implementation from building tests (TDD)
+
+```python
+
+# API tests
+
+def test_should_return_title_is_a_required_field(token_valid_mock, client):
+    # Given a request with a missing required field
+    response = client.post(
+        "/api/news",
+        headers={"authorization": f"Bearer {token_valid_mock}"},
+        json={},
+    )
+
+    # Then
+    assert response.status_code == 400
+    assert response.json["detail"] == "'title' is a required property"
+
+
+def test_should_reject_title_less_than_min_title_length(token_valid_mock, client):
+    # Given a request with an invalid title
+    response = client.post(
+        "/api/news",
+        headers={"authorization": f"Bearer {token_valid_mock}"},
+        json={"title": "tiny-title"},
+    )
+
+    # Then
+    assert response.status_code == 400
+    assert response.json["detail"] == "'tiny-title' is too short - 'title'"
+
+
+@patch("hackernews.services.news.create_news")
+def test_should_accept_null_description(news_mock, token_valid_mock, client):
+
+    news_mock.return_value = {}
+
+    # Given a request with an empty description (non string)
+    response = client.post(
+        "/api/news",
+        headers={"authorization": f"Bearer {token_valid_mock}"},
+        json={
+            "title": "A valid and simple title",
+            "description": None,
+        },
+    )
+
+    # Then
+    assert response.status_code == 201
+    news_mock.assert_called_once_with("A valid and simple title", None)
+
+```
+
+Then, we jump up directly to the API Contract. Note that the contract has information
+to do input validations
+
+```YAML
+
+  # hackernews/api/openapi.yaml
+  /api/news:
+    post:
+      operationId: hackernews.api.news.create_news
+      summary: Creates a news
+      tags:
+        - News
+      security:
+        - jwtAuth: [news:create]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  example: This is an awesome news
+                  minLength: 12
+                description:
+                  type: string
+                  example: Some extra information about the news
+                  nullable: true
+
+      responses:
+        201:
+          description: News created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/News"
+        400:
+          description: Invalid data
+        401:
+          description: No Authorization
+
+components:
+
+  schemas:
+    News:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        title:
+          type: string
+          example: Python is a great option for backend and APIs
+        description:
+          type: string
+          example: This is along text within more detailed information about the news
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          example: 2021-01-11T11:32:28Z
+```
+
+
 
 
 ## Thanks and Inspirations

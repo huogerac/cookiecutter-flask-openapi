@@ -1,7 +1,8 @@
 .ONESHELL:
 
+{% if cookiecutter.package_manager == 'requirements.txt' -%}
 ENV_PREFIX=$(shell python -c "if __import__('pathlib').Path('.venv/bin/pip').exists(): print('.venv/bin/')")
-
+{% endif %}
 
 .PHONY: help
 help:                      ## Show this help
@@ -13,7 +14,7 @@ help:                      ## Show this help
 
 .PHONY: show
 show:                      ## Show the current environment
-	@echo "Current environment:"
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}@echo "Current environment:"
 	if [ -z "${ENV_PREFIX}" ]
 	then
 		if [ -d .venv ]; then
@@ -31,16 +32,24 @@ show:                      ## Show the current environment
 	@echo ">>> Running using '$(ENV_PREFIX)'"
 	@$(ENV_PREFIX)python -V
 	@$(ENV_PREFIX)python -m site
+	{% else %}@echo "Checking environment:"
+	@pipenv check 2> /dev/null || (echo "pipenv not installed. Error $$?"; exit 1)
+	@pipenv check
+	{% endif %}
 
 
 .PHONY: virtualenv
 virtualenv:                ## Create a virtual environment
-	@echo "creating virtualenv ..."
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}@echo "creating virtualenv ..."
 	@rm -rf .venv
 	@virtualenv .venv
 	@./.venv/bin/pip install -U pip
 	@echo
 	@echo "!!! Please run 'source .venv/bin/activate' to enable the environment !!!"
+	{% else %}@echo "creating virtualenv using Pipenv..."
+	@pipenv check
+	@echo "Use 'pipenv shell' or 'pipenv run' to run commands inside your virtualenv"
+	{% endif %}
 
 
 .PHONY: system-packages
@@ -50,7 +59,7 @@ system-packages:           ## Install SO dependencies
 
 .PHONY: python-packages
 python-packages:           ## Install project dependencies (dev mode)
-	@echo "Installing dependencies..."
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}@echo "Installing dependencies..."
 	if [ -z "${ENV_PREFIX}" ]
 	then
 		echo "Virtualenv not activated"
@@ -59,7 +68,9 @@ python-packages:           ## Install project dependencies (dev mode)
 		exit 1
 	fi
 	@$(ENV_PREFIX)pip install -r requirements-dev.txt
-	@echo "Project dependencies installed!!!"
+	{% else %}@echo "Installing dependencies..."
+	@pipenv sync --dev
+	{% endif %}@echo "Project dependencies installed!!!"
 
 
 .PHONY: install
@@ -76,14 +87,19 @@ clean:                     ## Clean unused files
 
 .PHONY: code-fmt
 code-fmt:                  ## Format code using black & isort
-	$(ENV_PREFIX)isort {{cookiecutter.project_slug}}/
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}$(ENV_PREFIX)isort {{cookiecutter.project_slug}}/
 	$(ENV_PREFIX)black -l 88 {{cookiecutter.project_slug}}/
-
+	{% else %}@pipenv run isort {{cookiecutter.project_slug}}/
+	@pipenv run black -l 88 {{cookiecutter.project_slug}}/
+	{% endif %}
 
 .PHONY: linter
 linter:                    ## Run pep8, black
-	$(ENV_PREFIX)pylint {{cookiecutter.project_slug}}/**/*.py
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}$(ENV_PREFIX)pylint {{cookiecutter.project_slug}}/**/*.py
 	$(ENV_PREFIX)black -l 88 --check {{cookiecutter.project_slug}}/
+	{% else %}@pipenv run pylint {{cookiecutter.project_slug}}/**/*.py
+	@pipenv run black -l 88 --check {{cookiecutter.project_slug}}
+	{% endif %}
 
 
 .PHONY: db-test-up
@@ -99,18 +115,23 @@ db-test-down:              ## Stop Postgres (test instance)
 .PHONY: tests
 tests: linter db-test-up   ## Run tests using pytest and docker DB
 	@sleep 1
-	$(ENV_PREFIX)pytest
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}$(ENV_PREFIX)pytest
+	{% else %}@pipenv run pytest
+	{% endif %}
 
 
 .PHONY: db-up
 db-up:                     ## Run Postgres for testing (using docker)
-	@docker-compose up -d postgres_dev
+	@docker-compose up -d postgres_local
 
 
 .PHONY: run
 run: db-up                 ## Run the Flask app
-	@flask db upgrade
+	{% if cookiecutter.package_manager == 'requirements.txt' -%}@flask db upgrade
 	@flask run
+	{% else %}@pipenv run flask db upgrade
+	@pipenv run flask run
+	{% endif %}
 
 
 .PHONY: all

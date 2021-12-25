@@ -58,6 +58,13 @@ def remove_vscode_files():
     if os.path.exists(vscode_dir):
         shutil.rmtree(vscode_dir)
 
+def remove_package_manager_files():
+    file_names = ["Pipfile", "Pipfile.lock"]
+    if "{{ cookiecutter.package_manager }}".lower() != "requirements.txt":
+        file_names = ["requirements.txt", "requirements-dev.txt"]
+    for file_name in file_names:
+        os.remove(file_name)
+
 
 def main():
 
@@ -78,23 +85,23 @@ def main():
         print(INFO + "  - Removing VSCode files" + TERMINATOR)
         remove_vscode_files()
 
-    print("\n\n")
-    print(SUCCESS + "🐍 Huruuuu, All done! ✨ 🍰 ✨\n\n" + HINT)
+    if "{{ cookiecutter.package_manager }}".lower() != "requirements.txt":
+        print(INFO + "  - Using Pipenv files" + TERMINATOR)
+    else:
+        print(INFO + "  - Using requirements.txt and virtualenv" + TERMINATOR)
+    remove_package_manager_files()
+
+    print(SUCCESS + "🐍 Your project is created! ✨ 🍰 ✨\n\n" + HINT)
 
     print("What's next?")
-    print("  1) 🐳 Running using docker")
     print("     cd {{ cookiecutter.project_slug }}")
-    print("     docker-compose up --build\n\n")
-
-    print("  2) 🐍 Running using virtualenv")
-    print("     cd {{ cookiecutter.project_slug }}")
-    print("     make virtualenv")
-    print("     source .venv/bin/activate")
-    print("     make all\n\n")
-    print("  Then")
-    print("     access 🚀 http://localhost:5000/api\n\n" + TERMINATOR)
-
-    print(INFO + "⚠️ You must have Docker installed, at least to run the postgres database\n" + TERMINATOR)
+    print("     Check the README_DOCKER 🐳")
+    if "{{ cookiecutter.package_manager }}".lower() == "requirements.txt":
+        print("     Check the README_VIRTUALENV 🐍")
+    else:
+        print("     Check the README_PIPENV 🐍")
+    
+    print(INFO + "⚠️ For more details, check the Makefile or run: make help\n" + TERMINATOR)
 
 if __name__ == "__main__":
     main()

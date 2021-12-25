@@ -2,7 +2,8 @@ version: "2.4"
 services:
   postgres_test:
     container_name: "{{cookiecutter.project_slug}}-postgres-test"
-    image: "postgres:13.3-alpine"
+    # network_mode: host
+    image: "postgres:{{cookiecutter.postgresql_version}}"
     env_file:
       - .env.test
     ports:

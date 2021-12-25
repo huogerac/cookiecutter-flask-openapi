@@ -1,15 +1,16 @@
 {
   "project_name": "Hackernews Clone",
   "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+  "description": "The Ultimate Flask Template",
   "main_model": "News",
   "main_model_lower": "{{ cookiecutter.main_model.lower() }}",
-  "description": "The Ultimate Flask Template",
-  "author_name": "Roger Camargo",
-  "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
-  "version": "0.1.0",
   "python_version": [
     "3.8.10",
     "3.9.5"
+  ],
+  "package_manager": [
+    "requirements.txt",
+    "Pipenv"
   ],
   "postgresql_version": [
     "13.3-alpine",
@@ -19,5 +20,8 @@
   "use_dockerfile": "yes",
   "use_github_actions_CI": "yes",
   "deploy_to_heroku": "yes",
-  "keep_vscode_settings": "yes"
+  "keep_vscode_settings": "yes",
+  "author_name": "Roger Camargo",
+  "email": "{{ cookiecutter.author_name.lower()|replace(' ', '-') }}@example.com",
+  "version": "0.1.0"
 }

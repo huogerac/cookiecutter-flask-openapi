@@ -1,0 +1,32 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "~=1.1"
+connexion = {version = "~=2.9", extras = ["swagger-ui"]}
+flask-cors = "~=3.0"
+flask-migrate = "~=2.7"
+python-dotenv = "*"
+flask-sqlalchemy = "~=2.5"
+pyjwt = "~=2.1"
+psycopg2 = "*"
+
+[dev-packages]
+black = "*"
+isort = "*"
+pylint-flask = "*"
+pylint-flask-sqlalchemy = "*"
+pytest-flask = "*"
+pytest-dotenv = "*"
+pytest-mock = "*"
+mock = "~=4.0"
+flask-shell-ipython = "*"
+
+[requires]
+{% if cookiecutter.python_version == '3.8.10' -%}
+python_version = "3.8"
+{%- else %}
+python_version = "3.9"
+{%- endif %}
