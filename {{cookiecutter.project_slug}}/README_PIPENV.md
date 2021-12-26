@@ -1,6 +1,61 @@
-# Cookiecutter Flask OpenAPI boilerplate
+# Cookiecutter Flask OpenAPI
 
-[![GitHub issues](https://img.shields.io/github/issues/huogerac/cookiecutter-flask-openapi?style=for-the-badge)](https://github.com/huogerac/cookiecutter-flask-openapi/issues) [![GitHub stars](https://img.shields.io/github/stars/huogerac/cookiecutter-flask-openapi?style=for-the-badge)](https://github.com/huogerac/cookiecutter-flask-openapi/stargazers) [![GitHub license](https://img.shields.io/github/license/huogerac/cookiecutter-flask-openapi?style=for-the-badge)](https://github.com/huogerac/cookiecutter-flask-openapi/blob/master/LICENSE) [![code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
+> Pipenv GUIDE
 
-    print("     access 🚀 http://localhost:5000/api/status")
-    print("     access 🚀 http://localhost:5000/api\n\n" + TERMINATOR)
+### Requirements
+
+- Python {{cookiecutter.python_version}} Installed
+- DB and DB Test Up and Running (See README_DOCKER)
+- Pipenv Installed
+
+### Set your Pipenv to create virtualenv inside the project
+
+```
+export PIPENV_VENV_IN_PROJECT=1
+```
+
+### Create the virtual environment
+
+```
+pipenv check
+```
+
+### Install Python Packages
+
+```
+pipenv sync --dev
+
+```
+
+### Run the API
+
+```
+pipenv run flask db upgrade
+pipenv run flask run
+
+```
+
+Then, 
+- access 🚀 http://localhost:5000/api to access the API documentation
+- access 🚀 http://localhost:5000/api/status to check the API statuses
+- access 🚀 http://localhost:5000/api/{{cookiecutter.main_model_lower}} to list {{cookiecutter.main_model}}
+
+### Tests
+
+```
+pipenv run pytest
+```
+
+### Linter && Code Style
+
+```
+pylint {{cookiecutter.project_slug}}/**/*.py
+black -l 88 --check {{cookiecutter.project_slug}}/
+
+```
+
+
+
+### Extra
+
+Check the **Makefile** and run `make help` where it has all commands above shortcuts and more...

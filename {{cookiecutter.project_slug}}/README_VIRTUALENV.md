@@ -41,6 +41,12 @@ python -m flask db upgrade
 python -m flask run
 ```
 
+Then, 
+- access 🚀 http://localhost:5000/api to access the API documentation
+- access 🚀 http://localhost:5000/api/status to check the API statuses
+- access 🚀 http://localhost:5000/api/{{cookiecutter.main_model_lower}} to list {{cookiecutter.main_model}}
+
+
 ### Tests
 
 ```
